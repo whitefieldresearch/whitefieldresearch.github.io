@@ -1495,6 +1495,257 @@ body {
 }
 
 /* ═══════════════════════════════════════
+   CONTACT FORM
+═══════════════════════════════════════ */
+.contact-form-section {
+  padding: 100px 24px;
+  background: var(--white);
+  position: relative;
+}
+
+.contact-form-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.contact-form-wrapper {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Left info panel */
+.cf-info {}
+
+.cf-info-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--navy);
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.cf-info-title em { font-style: italic; color: var(--gold); }
+
+.cf-info-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--text-soft);
+  margin-bottom: 20px;
+}
+
+.cf-info-desc {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+
+.cf-contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cf-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--off-white);
+  border: 1px solid rgba(11,31,58,0.07);
+  border-left: 3px solid var(--gold);
+  border-radius: 10px;
+}
+
+.cf-contact-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.cf-contact-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-soft);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.cf-contact-value {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+/* Right form panel */
+.cf-form-panel {
+  background: var(--off-white);
+  border: 1px solid rgba(11,31,58,0.08);
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.cf-form-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-bright));
+}
+
+.cf-form-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+
+.cf-form-sub {
+  font-size: 13px;
+  color: var(--text-soft);
+  margin-bottom: 24px;
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.cf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.cf-field {
+  margin-bottom: 16px;
+}
+
+.cf-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--navy);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.cf-required { color: var(--gold); margin-left: 2px; }
+
+.cf-input,
+.cf-select,
+.cf-textarea {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid rgba(11,31,58,0.12);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  transition: all 0.2s;
+  outline: none;
+  appearance: none;
+}
+
+.cf-input:focus,
+.cf-select:focus,
+.cf-textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+}
+
+.cf-input::placeholder,
+.cf-textarea::placeholder { color: rgba(11,31,58,0.3); }
+
+.cf-textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+.cf-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230B1F3A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.cf-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-bright));
+  background-size: 200%;
+  color: var(--navy);
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 15px 28px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.35);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.cf-submit:hover {
+  background-position: right;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.5);
+}
+
+.cf-submit:active { transform: translateY(0); }
+
+/* Success message */
+.cf-success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.cf-success-icon { font-size: 52px; margin-bottom: 16px; }
+
+.cf-success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.cf-success-msg {
+  font-size: 14px;
+  color: var(--text-soft);
+  line-height: 1.7;
+}
+
+.cf-privacy {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-top: 12px;
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════
    MOBILE RESPONSIVE
 ═══════════════════════════════════════ */
 @media (max-width: 900px) {
@@ -1520,6 +1771,10 @@ body {
   .bootcamp-detail-divider { width: 60px; height: 1px; }
 
   .recog-item { padding: 8px 16px; }
+
+  .contact-form-wrapper { grid-template-columns: 1fr; gap: 40px; }
+  .cf-row { grid-template-columns: 1fr; }
+  .cf-form-panel { padding: 24px; }
 }
 
 @media (max-width: 600px) {
@@ -1548,7 +1803,8 @@ body {
       <li><a href="#about">About</a></li>
       <li><a href="#bootcamp">Bootcamp</a></li>
       <li><a href="#faculty">Faculty</a></li>
-      <li><a href="#contact" class="nav-cta">Register — ₹9 Only</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#register" class="nav-cta">Register — ₹9 Only</a></li>
     </ul>
     <div class="nav-hamburger" onclick="this.classList.toggle('open')">
       <span></span><span></span><span></span>
@@ -2023,9 +2279,9 @@ body {
 </section>
 
 <!-- ════════════════════════════════════
-     CONTACT / REGISTER
+     REGISTER CARD
 ════════════════════════════════════ -->
-<section class="contact-section" id="contact">
+<section class="contact-section" id="register">
   <div class="contact-inner">
     <div style="text-align:center;margin-bottom:40px;">
       <div class="section-tag" style="margin:0 auto 16px;">Register Now</div>
@@ -2057,6 +2313,152 @@ body {
         <div class="contact-detail">📍 <strong>Noida, UP (Online)</strong></div>
         <div class="contact-detail">🎓 <strong>Certificate Provided</strong></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
+     CONTACT US FORM
+════════════════════════════════════ -->
+<section class="contact-form-section" id="contact">
+  <div class="contact-form-wrapper">
+
+    <!-- LEFT — Info -->
+    <div class="cf-info animate-fade-up delay-1">
+      <div class="section-tag">Contact Us</div>
+      <h2 class="cf-info-title">Get in <em>Touch</em><br>With Us</h2>
+      <p class="cf-info-sub">We typically respond within 24 hours</p>
+      <p class="cf-info-desc">
+        Have a question about the bootcamp, need more details about registration, or want to explore partnership opportunities? Fill in the form and our team will get back to you promptly.
+      </p>
+
+      <div class="cf-contact-items">
+        <div class="cf-contact-item">
+          <span class="cf-contact-icon">📧</span>
+          <div>
+            <span class="cf-contact-label">Email</span>
+            <span class="cf-contact-value">whitefieldresearch@gmail.com</span>
+          </div>
+        </div>
+        <div class="cf-contact-item">
+          <span class="cf-contact-icon">📅</span>
+          <div>
+            <span class="cf-contact-label">Bootcamp Dates</span>
+            <span class="cf-contact-value">11th – 15th May 2026</span>
+          </div>
+        </div>
+        <div class="cf-contact-item">
+          <span class="cf-contact-icon">📍</span>
+          <div>
+            <span class="cf-contact-label">Address</span>
+            <span class="cf-contact-value">522, C-Wing, Galaxy Royale,<br>Gaur City 2, Noida, UP – 201301</span>
+          </div>
+        </div>
+        <div class="cf-contact-item">
+          <span class="cf-contact-icon">🌐</span>
+          <div>
+            <span class="cf-contact-label">Website</span>
+            <span class="cf-contact-value">whitefieldresearch.github.io</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT — Form -->
+    <div class="cf-form-panel animate-fade-up delay-2">
+
+      <!-- Success message (hidden by default) -->
+      <div class="cf-success" id="cf-success">
+        <div class="cf-success-icon">✅</div>
+        <div class="cf-success-title">Message Sent Successfully!</div>
+        <p class="cf-success-msg">
+          Thank you for reaching out to Whitefield Research and Innovation.<br>
+          We will get back to you at your email within 24 hours.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <div id="cf-form-wrap">
+        <div class="cf-form-title">Send us a Message</div>
+        <p class="cf-form-sub">All fields marked with <span style="color:var(--gold)">*</span> are required</p>
+
+        <form
+          id="wri-contact-form"
+          action="https://api.web3forms.com/submit"
+          method="POST">
+
+          <!-- Web3Forms Access Key — hidden -->
+          <input type="hidden" name="access_key" value="1da04c95-ec78-4cc4-b59b-c2d5e8df6061">
+          <!-- Subject line in your Gmail inbox -->
+          <input type="hidden" name="subject" value="New Query — Whitefield Research Website">
+          <!-- Redirect to same page after submit -->
+          <input type="hidden" name="redirect" value="false">
+          <!-- Bot honeypot -->
+          <input type="checkbox" name="botcheck" style="display:none;">
+
+          <div class="cf-row">
+            <div class="cf-field">
+              <label class="cf-label">Full Name <span class="cf-required">*</span></label>
+              <input
+                class="cf-input"
+                type="text"
+                name="name"
+                placeholder="Your full name"
+                required>
+            </div>
+            <div class="cf-field">
+              <label class="cf-label">Email Address <span class="cf-required">*</span></label>
+              <input
+                class="cf-input"
+                type="email"
+                name="email"
+                placeholder="your@email.com"
+                required>
+            </div>
+          </div>
+
+          <div class="cf-row">
+            <div class="cf-field">
+              <label class="cf-label">Phone Number</label>
+              <input
+                class="cf-input"
+                type="tel"
+                name="phone"
+                placeholder="+91 00000 00000">
+            </div>
+            <div class="cf-field">
+              <label class="cf-label">Query Type <span class="cf-required">*</span></label>
+              <select class="cf-select" name="query_type" required>
+                <option value="" disabled selected>Select a topic</option>
+                <option value="Bootcamp Registration">Bootcamp Registration</option>
+                <option value="General Query">General Query</option>
+                <option value="Partnership / Collaboration">Partnership / Collaboration</option>
+                <option value="Faculty / Training">Faculty / Training</option>
+                <option value="Certificate Query">Certificate Query</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cf-field">
+            <label class="cf-label">Message <span class="cf-required">*</span></label>
+            <textarea
+              class="cf-textarea"
+              name="message"
+              placeholder="Write your query here — we read every message carefully..."
+              required></textarea>
+          </div>
+
+          <button type="submit" class="cf-submit" id="cf-submit-btn">
+            <span id="cf-btn-text">✉️ &nbsp; Send Message</span>
+            <span id="cf-btn-loading" style="display:none;">⏳ &nbsp; Sending...</span>
+          </button>
+
+          <p class="cf-privacy">🔒 Your information is safe. We never share your data with third parties.</p>
+
+        </form>
+      </div>
+
     </div>
   </div>
 </section>
@@ -2115,6 +2517,50 @@ window.addEventListener('scroll', () => {
     navbar.style.boxShadow = 'none';
   }
 });
+
+// ── Web3Forms AJAX Submit ──
+const form = document.getElementById('wri-contact-form');
+if (form) {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const btn      = document.getElementById('cf-submit-btn');
+    const btnText  = document.getElementById('cf-btn-text');
+    const btnLoad  = document.getElementById('cf-btn-loading');
+
+    // Show loading state
+    btn.disabled  = true;
+    btnText.style.display = 'none';
+    btnLoad.style.display = 'inline';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Show success message
+        document.getElementById('cf-form-wrap').style.display = 'none';
+        document.getElementById('cf-success').style.display   = 'block';
+      } else {
+        alert('Something went wrong. Please email us directly at whitefieldresearch@gmail.com');
+        btn.disabled  = false;
+        btnText.style.display = 'inline';
+        btnLoad.style.display = 'none';
+      }
+    } catch (error) {
+      alert('Network error. Please email us directly at whitefieldresearch@gmail.com');
+      btn.disabled  = false;
+      btnText.style.display = 'inline';
+      btnLoad.style.display = 'none';
+    }
+  });
+}
 </script>
 
 </body>
