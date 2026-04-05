@@ -1745,6 +1745,31 @@ body {
   opacity: 0.7;
 }
 
+/* Validation error messages */
+.cf-error {
+  display: block;
+  font-size: 11px;
+  color: #c0392b;
+  font-weight: 600;
+  margin-top: 4px;
+  min-height: 16px;
+  letter-spacing: 0.2px;
+}
+
+.cf-input.invalid,
+.cf-select.invalid,
+.cf-textarea.invalid {
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+
+.cf-input.valid,
+.cf-select.valid,
+.cf-textarea.valid {
+  border-color: #27ae60;
+  box-shadow: 0 0 0 3px rgba(39,174,96,0.08);
+}
+
 /* ═══════════════════════════════════════
    MOBILE RESPONSIVE
 ═══════════════════════════════════════ */
@@ -2419,12 +2444,18 @@ body {
 
           <div class="cf-row">
             <div class="cf-field">
-              <label class="cf-label">Phone Number</label>
+              <label class="cf-label">Phone Number <span class="cf-required">*</span></label>
               <input
                 class="cf-input"
                 type="tel"
+                id="cf-phone"
                 name="phone"
-                placeholder="+91 00000 00000">
+                placeholder="10-digit mobile number"
+                maxlength="10"
+                pattern="[6-9][0-9]{9}"
+                inputmode="numeric"
+                required>
+              <span class="cf-error" id="phone-error"></span>
             </div>
             <div class="cf-field">
               <label class="cf-label">Query Type <span class="cf-required">*</span></label>
@@ -2441,12 +2472,19 @@ body {
           </div>
 
           <div class="cf-field">
-            <label class="cf-label">Message <span class="cf-required">*</span></label>
+            <label class="cf-label" style="display:flex;justify-content:space-between;align-items:center;">
+              <span>Message <span class="cf-required">*</span></span>
+              <span id="msg-counter" style="font-size:10px;font-weight:400;color:var(--text-soft);letter-spacing:0;">0 / 500 characters</span>
+            </label>
             <textarea
               class="cf-textarea"
+              id="cf-message"
               name="message"
-              placeholder="Write your query here — we read every message carefully..."
+              placeholder="Write your query here — minimum 20 characters, maximum 500 characters..."
+              minlength="20"
+              maxlength="500"
               required></textarea>
+            <span class="cf-error" id="msg-error"></span>
           </div>
 
           <button type="submit" class="cf-submit" id="cf-submit-btn">
@@ -2518,20 +2556,161 @@ window.addEventListener('scroll', () => {
   }
 });
 
-// ── Web3Forms AJAX Submit ──
+// ── FORM VALIDATION & SUBMISSION ──
 const form = document.getElementById('wri-contact-form');
+
 if (form) {
-  form.addEventListener('submit', async function(e) {
+
+  // ── Helpers ──
+  function showError(input, errorId, msg) {
+    input.classList.add('invalid');
+    input.classList.remove('valid');
+    const el = document.getElementById(errorId);
+    if (el) el.textContent = msg;
+  }
+
+  function showValid(input, errorId) {
+    input.classList.remove('invalid');
+    input.classList.add('valid');
+    const el = document.getElementById(errorId);
+    if (el) el.textContent = '';
+  }
+
+  // ── Phone: only digits, block letters live ──
+  const phoneInput = document.getElementById('cf-phone');
+  if (phoneInput) {
+    phoneInput.addEventListener('input', function () {
+      // Strip anything that's not a digit
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    phoneInput.addEventListener('blur', function () {
+      const val = this.value.trim();
+      if (val === '') {
+        showError(this, 'phone-error', 'Phone number is required.');
+      } else if (!/^[6-9]\d{9}$/.test(val)) {
+        if (val.length !== 10) {
+          showError(this, 'phone-error', 'Must be exactly 10 digits.');
+        } else {
+          showError(this, 'phone-error', 'Must start with 6, 7, 8, or 9 (valid Indian mobile).');
+        }
+      } else {
+        showValid(this, 'phone-error');
+      }
+    });
+  }
+
+  // ── Message counter & live validation ──
+  const msgInput = document.getElementById('cf-message');
+  const msgCounter = document.getElementById('msg-counter');
+  if (msgInput && msgCounter) {
+    msgInput.addEventListener('input', function () {
+      const len = this.value.length;
+      msgCounter.textContent = len + ' / 500 characters';
+      if (len < 20) {
+        msgCounter.style.color = '#c0392b';
+      } else if (len >= 480) {
+        msgCounter.style.color = '#e67e22';
+      } else {
+        msgCounter.style.color = 'var(--text-soft)';
+      }
+    });
+
+    msgInput.addEventListener('blur', function () {
+      const len = this.value.trim().length;
+      if (len === 0) {
+        showError(this, 'msg-error', 'Message is required.');
+      } else if (len < 20) {
+        showError(this, 'msg-error', `Too short — please write at least 20 characters (${len} entered).`);
+      } else {
+        showValid(this, 'msg-error');
+      }
+    });
+  }
+
+  // ── Full validation on submit ──
+  form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const btn      = document.getElementById('cf-submit-btn');
-    const btnText  = document.getElementById('cf-btn-text');
-    const btnLoad  = document.getElementById('cf-btn-loading');
+    let valid = true;
 
-    // Show loading state
-    btn.disabled  = true;
-    btnText.style.display = 'none';
-    btnLoad.style.display = 'inline';
+    // — Name —
+    const nameInput = form.querySelector('[name="name"]');
+    if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
+      showError(nameInput, null, '');
+      nameInput.classList.add('invalid');
+      valid = false;
+    } else {
+      showValid(nameInput, null);
+    }
+
+    // — Email —
+    const emailInput = form.querySelector('[name="email"]');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value.trim())) {
+      emailInput.classList.add('invalid');
+      valid = false;
+    } else {
+      showValid(emailInput, null);
+    }
+
+    // — Phone —
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    if (!phoneInput) {
+      valid = false;
+    } else if (!/^[6-9]\d{9}$/.test(phone)) {
+      if (phone === '') {
+        showError(phoneInput, 'phone-error', 'Phone number is required.');
+      } else if (phone.length !== 10) {
+        showError(phoneInput, 'phone-error', 'Must be exactly 10 digits.');
+      } else {
+        showError(phoneInput, 'phone-error', 'Must start with 6, 7, 8, or 9.');
+      }
+      valid = false;
+    } else {
+      showValid(phoneInput, 'phone-error');
+    }
+
+    // — Query Type —
+    const selectInput = form.querySelector('[name="query_type"]');
+    if (!selectInput.value) {
+      selectInput.classList.add('invalid');
+      valid = false;
+    } else {
+      showValid(selectInput, null);
+    }
+
+    // — Message —
+    const msgLen = msgInput ? msgInput.value.trim().length : 0;
+    if (!msgInput || msgLen === 0) {
+      showError(msgInput, 'msg-error', 'Message is required.');
+      valid = false;
+    } else if (msgLen < 20) {
+      showError(msgInput, 'msg-error', `Too short — minimum 20 characters (${msgLen} entered).`);
+      valid = false;
+    } else {
+      showValid(msgInput, 'msg-error');
+    }
+
+    // — Stop if invalid —
+    if (!valid) {
+      // Scroll to first invalid field
+      const firstInvalid = form.querySelector('.invalid');
+      if (firstInvalid) {
+        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstInvalid.focus();
+      }
+      return;
+    }
+
+    // — All valid — submit —
+    const btn     = document.getElementById('cf-submit-btn');
+    const btnText = document.getElementById('cf-btn-text');
+    const btnLoad = document.getElementById('cf-btn-loading');
+
+    btn.disabled              = true;
+    btnText.style.display     = 'none';
+    btnLoad.style.display     = 'inline';
 
     const formData = new FormData(form);
 
@@ -2544,18 +2723,17 @@ if (form) {
       const result = await response.json();
 
       if (result.success) {
-        // Show success message
         document.getElementById('cf-form-wrap').style.display = 'none';
         document.getElementById('cf-success').style.display   = 'block';
       } else {
-        alert('Something went wrong. Please email us directly at whitefieldresearch@gmail.com');
-        btn.disabled  = false;
+        alert('Something went wrong. Please email us at whitefieldresearch@gmail.com');
+        btn.disabled          = false;
         btnText.style.display = 'inline';
         btnLoad.style.display = 'none';
       }
     } catch (error) {
-      alert('Network error. Please email us directly at whitefieldresearch@gmail.com');
-      btn.disabled  = false;
+      alert('Network error. Please email us at whitefieldresearch@gmail.com');
+      btn.disabled          = false;
       btnText.style.display = 'inline';
       btnLoad.style.display = 'none';
     }
